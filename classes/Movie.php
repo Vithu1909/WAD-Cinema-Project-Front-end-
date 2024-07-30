@@ -170,7 +170,38 @@ class Movie {
     public function setGenre($genre): void {
         $this->genre = $genre;
     }
+    public function getMovieTime($movieId) {
+        $stmt = $this->conn->prepare('SELECT theater_ID FROM movie_theater WHERE movie_ID = ?');
+        $stmt->bindParam(1, $movieId);
+        $stmt->execute();
+    
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+        return $results;
+    }
+    public function getTheaterDetails($theater_ID) {
+        $stmt = $this->conn->prepare('SELECT name, location FROM theater WHERE theater_ID = ?');
+        $stmt->bindParam(1, $theater_ID);
+        $stmt->execute();
+    
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+        return $result;
+    }
+    public function getTheaterTimeDetails($theater_ID, $movieID) {
+        $stmt = $this->conn->prepare('SELECT time FROM movie_time WHERE theater_ID = ? AND movie_ID = ?');
+        $stmt->bindParam(1, $theater_ID);
+        $stmt->bindParam(2, $movieID);
+        $stmt->execute();
+        
+        // Fetch all results
+        $result = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+        
+        return $result;
+    }
+    
 
-
+    
+    
 
 }
